@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       				http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       				http://www.springframework.org/schema/context
+                    http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<bean id="injectableProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="singleton" value="true" />
+		<property name="ignoreResourceNotFound" value="false" />
+		<property name="locations">
+			<list>
+				<value>classpath:config.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="propertyPlaceholderConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreResourceNotFound" value="false" />
+		<property name="ignoreUnresolvablePlaceholders" value="false" />
+		<property name="properties" ref="injectableProperties" />
+	</bean>
+
+	<bean id="buffer-distance" class="java.lang.Double">
+		<constructor-arg value="${buffer}" />
+	</bean>
+
+
+	<bean id="pointsymbol-default-url" class="java.lang.String">
+		<constructor-arg value="${pointsymbol.default.url}" />
+	</bean>
+
+	<bean class="es.juntadeandalucia.sepim.utils.SRStransforms">
+		<constructor-arg>
+			<map>
+				<entry key="EPSG:23030"
+					value="st_transform_geometry(?, '+proj=utm +zone=30 +ellps=intl +units=m +no_defs +towgs84=-84.0,-107.0,-120.0,0.0,0.0,0.0,0.0'::text, '+proj=longlat +datum=WGS84'::text, 4326)"></entry>
+				<entry key="EPSG:25830" value="st_transform(?,4326)"></entry>
+				<entry key="EPSG:4326" value="?"></entry>
+			</map>
+		</constructor-arg>
+	</bean>
+</beans>
